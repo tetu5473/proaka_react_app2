@@ -59,44 +59,18 @@ const Todo: React.FC = () => {
   };
 
 
-  const handleEdit = (id: number, value: string) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id === id) {
-          return { ...todo, content: value };
-        }
-        return todo;
-      });
-      return newTodos;
-    });
-  };
+  // 共通の更新関数を使用したイベント処理関数
+ // const handleEdit = (id: number, value: string) => {
+ //   setTodos((todos) => updateTodo(todos, id, 'content', value));
+ // };
 
+ // const handleCheck = (id: number, completed_flg: boolean) => {
+ //  setTodos((todos) => updateTodo(todos, id, 'completed_flg', completed_flg));
+ // };
 
-  const handleCheck = (id: number, completed_flg: boolean) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id === id) {
-          return { ...todo, completed_flg };
-        }
-        return todo;
-      });
-      return newTodos;
-    });
-  };
-
-
-  const handleRemove = (id: number, delete_flg: boolean) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id === id) {
-          return { ...todo, delete_flg };
-        }
-        return todo;
-      });
-      return newTodos;
-    });
-  };
-
+ // const handleRemove = (id: number, delete_flg: boolean) => {
+ //   setTodos((todos) => updateTodo(todos, id, 'delete_flg', delete_flg));
+ // };
 
   const handleFilterChange = (filter: Filter) => {
     setFilter(filter);
@@ -106,6 +80,33 @@ const Todo: React.FC = () => {
    // 物理的に削除する関数
    const handleEmpty = () => {
     setTodos((todos) => todos.filter((todo) => !todo.delete_flg));
+  };
+
+  // const updateTodo = <T extends keyof Todo>(todos: Todo[], id: number, key: T, value: Todo[T]): Todo[] => {
+   // return todos.map((todo) => {
+   //   if (todo.id === id) {
+   //     return { ...todo, [key]: value };
+   //   }
+   //   return todo;
+   // });
+ // };
+
+  const handleTodo = <K extends keyof Todo, V extends Todo[K]>(
+    id: number,
+    key: K,
+    value: V
+  ) => {
+    setTodos((todos) => {
+      const newTodos = todos.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, [key]: value };
+        } else {
+          return todo;
+        }
+      });
+  
+      return newTodos;
+    });
   };
 
 
@@ -148,15 +149,17 @@ const Todo: React.FC = () => {
           <li key={todo.id}>
             <input
               type="checkbox"
+              disabled={todo.delete_flg}
               checked={todo.completed_flg}
-              onChange={() => handleCheck(todo.id, !todo.completed_flg)}
+              onChange={() => handleTodo(todo.id, 'completed_flg', !todo.completed_flg)}
             />
             <input
               type="text"
+              disabled={todo.completed_flg || todo.delete_flg}
               value={todo.content}
-              onChange={(e) => handleEdit(todo.id, e.target.value)}
+              onChange={(e) => handleTodo(todo.id, 'content', e.target.value)}
             />
-            <button onClick={() => handleRemove(todo.id, !todo.delete_flg)}>
+            <button onClick={() => handleTodo(todo.id, 'delete_flg', !todo.delete_flg)}>
               {todo.delete_flg ? '復元' : '削除'}
             </button>
           </li>
@@ -164,7 +167,7 @@ const Todo: React.FC = () => {
       </ul>
     </div>
   );
-};
+  };
 
 
 export default Todo;
