@@ -1,0 +1,6 @@
+[submodule "todo_list_server_text"]
+	path = todo_list_server_text
+	url = https://github.com/tetu5473/todo_list_server_text.git
+[submodule "vite-project"]
+	path = vite-project
+	url = https://github.com/tetu5473/vite-project.git
