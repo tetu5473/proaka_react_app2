@@ -1,3 +1,4 @@
+# 保存したい内容をすべて含める
 # Logs
 logs
 *.log
@@ -22,3 +23,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+src/todo_list_server_text/
